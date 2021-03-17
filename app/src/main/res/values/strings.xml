@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Firebase as a Database</string>
+    <string name="add_contact">add contact</string>
+</resources>
