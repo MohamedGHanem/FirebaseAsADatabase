@@ -1,4 +1,4 @@
-package com.top.firebaseasadatabase
+package com.top.firebaseasadatabase.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.top.firebaseasadatabase.R
 import com.top.firebaseasadatabase.adapter.UserAdapter
 import com.top.firebaseasadatabase.model.UserInfo
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,60 +15,64 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val db = FirebaseFirestore.getInstance()
-
+    private val TAG = MainActivity::class.java.name
+    private val data = mutableListOf<UserInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
+        readDataCloudFirestore()
+
 
         floatingActionButton.setOnClickListener {
             val intent = Intent(applicationContext, AddContactActivity::class.java)
             startActivity(intent)
-
-            readData()
-
         }
 
 
-//        val rootRef = FirebaseFirestore.getInstance()
-//        val query: Query = rootRef.collection("users")
-//            .orderBy("user_name", Query.Direction.ASCENDING)
-
-        val data = mutableListOf<UserInfo>()
-
-        data.add(UserInfo(1, "Ahmed", 123, "address"))
-        data.add(UserInfo(2, "M", 444, "address"))
-        data.add(UserInfo(3, "B", 555, "address"))
-
-
-
+//          //adapter and recyclerview.
         rv_main.layoutManager = LinearLayoutManager(this)
-        rv_main.layoutManager = GridLayoutManager(this, 2)
+        rv_main.layoutManager = GridLayoutManager(this, 1)
         rv_main.setHasFixedSize(true)
-        val studentAdapter = UserAdapter(this, data)
-
-        rv_main.adapter = studentAdapter
 
 
     }
 
 
-    private fun readData() {
+    private fun readDataCloudFirestore() {
+        val db = FirebaseFirestore.getInstance()
 
-//        db.collection("users").orderBy("user_name").limit(2)
-        db.collection("users").orderBy("user_name").limit(2)
+        var idUser = 0
+
+        db.collection("users")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d("TAG_Get_Data: ", "${document.id} => ${document.data.values}")
+                    data.add(
+                        UserInfo(
+                            idUser++.toString(),
+                            document.get("user_name").toString(),
+                            document.get("mobile_number").toString(),
+                            document.get("user_address").toString()
+                        )
+
+
+                    )
                 }
+
+                data.size
+
+                val studentAdapter = UserAdapter(this, data)
+                rv_main.adapter = studentAdapter
+
+
             }
             .addOnFailureListener { exception ->
-                Log.d("TAG", "Error getting documents.", exception)
+                Log.d(TAG, "Error getting documents.", exception)
             }
+
     }
 
 

@@ -34,9 +34,9 @@ class UserAdapter(var activity: Activity, var data: MutableList<UserInfo>) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.tvId.text = data[position].id.toString()
+        holder.tvId.text = data[position].id
         holder.tvName.text = data[position].name
-        holder.tvAverage.text = data[position].mobileNumber.toString()
+        holder.tvAverage.text = data[position].mobileNumber
         holder.tvAddress.text = data[position].address
 
         holder.tvAddress.setOnClickListener {

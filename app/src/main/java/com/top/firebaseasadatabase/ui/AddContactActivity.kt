@@ -1,10 +1,11 @@
-package com.top.firebaseasadatabase
+package com.top.firebaseasadatabase.ui
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.top.firebaseasadatabase.R
 import kotlinx.android.synthetic.main.activity_add_contact.*
 
 
@@ -26,8 +27,8 @@ class AddContactActivity : AppCompatActivity() {
 //            )
 
         btn_save.setOnClickListener {
-//            saveDateOnFireStore()
-            readData()
+            saveDateOnFireStore()
+//            readData()
         }
 
     }
@@ -59,20 +60,6 @@ class AddContactActivity : AppCompatActivity() {
         } else {
             Toast.makeText(applicationContext, "Enter Data", Toast.LENGTH_SHORT).show()
         }
-    }
-
-
-    private fun readData() {
-        db.collection("users")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d("TAG_Get_Data: ", "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("TAG", "Error getting documents.", exception)
-            }
     }
 
 
